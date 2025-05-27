@@ -1,0 +1,36 @@
+# Compilados de Java
+*.class
+
+# Directorios de compilación
+/target/
+/out/
+
+# Archivos de configuración de IDEs
+*.iml
+.idea/
+*.ipr
+*.iws
+*.vscode/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de logs
+*.log
+
+# Archivos de Maven
+/logs/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Archivos de entorno
+.env
+
+# Archivos de pruebas
+/test-output/
+
+# Archivos de cobertura
+jacoco.exec
+
+# Otros
+*.swp
