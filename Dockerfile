@@ -25,6 +25,9 @@ RUN ./mvnw clean package -DskipTests
 # Runtime stage
 FROM openjdk:21-jre-slim
 
+# Install curl for health checks
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 # Set working directory
 WORKDIR /app
 
@@ -40,12 +43,12 @@ RUN chown -R spring:spring /app
 # Switch to non-root user
 USER spring
 
-# Expose port 8080
-EXPOSE 8080
+# Expose port (Render will use the PORT environment variable)
+EXPOSE $PORT
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
-  CMD curl -f http://localhost:8080/actuator/health || exit 1
+  CMD curl -f http://localhost:$PORT/actuator/health || exit 1
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the application with dynamic port binding
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=$PORT -jar app.jar"]
