@@ -22,17 +22,17 @@ COPY src ./src
 # Build the application
 RUN ./mvnw clean package -DskipTests
 
-# Runtime stage
-FROM openjdk:21-jre-slim
+# Runtime stage - using eclipse-temurin which has JRE 21 available
+FROM eclipse-temurin:21-jre-alpine
 
 # Install curl for health checks
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache curl
 
 # Set working directory
 WORKDIR /app
 
-# Create a non-root user
-RUN addgroup --system spring && adduser --system spring --ingroup spring
+# Create a non-root user (Alpine uses addgroup/adduser differently)
+RUN addgroup -S spring && adduser -S spring -G spring
 
 # Copy the JAR file from build stage
 COPY --from=build /app/target/*.jar app.jar
